@@ -9,7 +9,7 @@ def main():
 
         # run in a loop to continuously prompt the user for input to send to the server until they choose to exit
         while True:
-            message = input("Enter command (e.g., PUT key value): ") + "\n"
+            message = input("Enter command (`PUT key value` or `GET key`): ") + "\n"
             # close the connection if the user types "EXIT" signifying they want to disconnect
             if message == "EXIT":
                 break
