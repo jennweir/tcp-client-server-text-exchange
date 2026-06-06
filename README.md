@@ -12,13 +12,13 @@ Demonstrates fundamental Inter-Process Communication (IPC) by upgrading a basic 
 ### Run the TCP echo server
 
 - Navigate to the directory that contains `server.py`
-- Run the server with `python server.py`
+- Run the server with `python3 server.py`
 - At this point, the server should be listening
 
 ### Run the client
 
 - In a separate terminal, navigate to the direcotry that contains `client.py`
-- Run the client with `python client.py`
+- Run the client with `python3 client.py`
 - At this point, the client will connect to the server
 
 ### Test Commands
