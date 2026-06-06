@@ -14,12 +14,14 @@ def main():
         print(f"Connection from {client_address}")
 
         try:
-            # TODO: Upgrade this to run in a loop and parse PUT/GET commands
-            message = client_socket.recv(1024).decode('utf-8').strip()
-            print(f"Received: {message}")
+            # run in a loop to continuously receive messages from a client until it disconnects
+            while True:
+                message = client_socket.recv(1024).decode('utf-8').strip()
+                print(f"Received: {message}")
+                # parse PUT/GET commands
 
-            response = "Message received\n".encode('utf-8')
-            client_socket.sendall(response)
+                response = "Message received\n".encode('utf-8')
+                client_socket.sendall(response)
 
         except Exception as e:
             print(f"Error: {e}")
