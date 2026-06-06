@@ -1,18 +1,18 @@
 import socket
 import threading
 
-def handle_client_connections(client_socket):
+def handle_client_connections(client_socket, client_address):
     try:
         # run in a loop to continuously receive messages from a client until it disconnects
         while True:
             message = client_socket.recv(1024).decode('utf-8').strip()
-            print(f"Received: {message}")
+            print(f"Received: {message} from {client_address}")
             # parse PUT/GET commands
-            if message.contains("PUT"):
+            if message == "PUT":
                 # handle PUT command
                 pass
             
-            if message.contains("GET"):
+            if message == "GET":
                 # handle GET command
                 pass
 
@@ -39,7 +39,7 @@ def main():
             print(f"Connection from {client_address}")
             # create daemon threads to handle each client connection concurrently
             # use daemon threads so they will automatically be cleaned up when the server shuts down
-            thread = threading.Thread(target=handle_client_connections, args=(client_socket,), daemon=True)
+            thread = threading.Thread(target=handle_client_connections, args=(client_socket, client_address), daemon=True)
             thread.start()
             threads.append(thread)
 
