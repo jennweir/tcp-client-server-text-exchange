@@ -6,6 +6,9 @@ def handle_client_connections(client_socket, client_address, storage):
         # run in a loop to continuously receive messages from a client until it disconnects
         while True:
             message = client_socket.recv(1024).decode('utf-8').strip()
+            # if message is empty, the client has disconnected. handle broken client connection gracefully
+            if not message:
+                break
             print(f"Received: {message} from {client_address}")
             # parse PUT/GET commands
             if message.startswith("PUT"):
@@ -23,17 +26,18 @@ def handle_client_connections(client_socket, client_address, storage):
             elif message.startswith("GET"):
                 # handle GET command
                 # split the message into the 2 expected pieces and retrieving the value for the key from the storage dictionary
-                _, key = message.split()
-                if key == "":
-                    response = "Error: GET command requires a non-emptykey. Try again.\n"
+                try:
+                    _, key = message.split()
+                except ValueError:
+                    response = "Error: GET command requires a non-empty key. Try again.\n"
                     client_socket.sendall(response.encode('utf-8'))
                     continue
                 # return 'Key not found' as error handling if the user requests a key that does not exist
                 value = storage.get(key, "Key not found")
-                response = f"Value for {key}: {value}\n"
+                response = f"Value for {key}: {value}\n".encode('utf-8')
 
             else:
-                response = "Error: Invalid command. Either `PUT key value` or `GET key` are accepted.\n"
+                response = "Error: Invalid command. Either `PUT key value` or `GET key` are accepted.\n".encode('utf-8')
 
             client_socket.sendall(response)
     except Exception as e:
