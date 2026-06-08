@@ -6,6 +6,7 @@ def main():
     client_socket.settimeout(15)  # timeout of 15 sec for socket operations
 
     try:
+        # attempt to connect to the server; handle connection errors as needed
         try:
             client_socket.connect(server_address)
         except ConnectionRefusedError:
@@ -21,9 +22,11 @@ def main():
             # close the connection if the user types "EXIT" signifying they want to disconnect
             if message == "EXIT":
                 break
+            # send input to the server
             client_socket.sendall((message + "\n").encode('utf-8'))
 
             try:
+                # receive the response from the server; handle connection errors as needed
                 response = client_socket.recv(1024).decode('utf-8').strip()
                 print(f"Server response: {response}")
             except socket.timeout:

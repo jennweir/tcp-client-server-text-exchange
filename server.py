@@ -71,6 +71,7 @@ def main():
         print("Server listening on port 12345...")
 
         while True:
+            # accept client connections and create threads to run client logic concurrently
             client_socket, client_address = server_socket.accept()
             print(f"Connection from {client_address}")
             # create daemon threads to handle each client connection concurrently
