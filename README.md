@@ -30,6 +30,6 @@ When prompted by the client, test a key-value store by typing commands (and then
 
 ### Test Concurrency
 
-When one client is still running, open another terminal and run another client. Verify both clients can send commands to the server without blocking or crashing.
+When one client is still running, open another terminal and run another client. Verify both clients can send commands to the server without blocking or crashing. Test concurrency by repeating this multiple times and running many clients at once.
 
 Type EXIT in the clients to verify they close cleanly.

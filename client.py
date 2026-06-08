@@ -22,18 +22,24 @@ def main():
             # close the connection if the user types "EXIT" signifying they want to disconnect
             if message == "EXIT":
                 break
-            # send input to the server
-            client_socket.sendall((message + "\n").encode('utf-8'))
-
+            
             try:
+                # send input to the server
+                client_socket.sendall((message + "\n").encode('utf-8'))
                 # receive the response from the server; handle connection errors as needed
                 response = client_socket.recv(1024).decode('utf-8').strip()
+                if not response:
+                    print("Error: Connection with server lost")
+                    break
                 print(f"Server response: {response}")
             except socket.timeout:
                 print("Error: Server response timeout due to client not receiving data for 15 seconds")
                 break
             except ConnectionResetError:
                 print("Error: Connection reset by server")
+                break
+            except BrokenPipeError:
+                print("Error: Connection with server lost")
                 break
 
     except Exception as e:
