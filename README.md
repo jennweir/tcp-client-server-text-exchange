@@ -17,7 +17,7 @@ Demonstrates fundamental Inter-Process Communication (IPC) by upgrading a basic 
 
 ### Run the client
 
-- In a separate terminal, navigate to the direcotry that contains `client.py`
+- In a separate terminal, navigate to the directory that contains `client.py`
 - Run the client with `python3 client.py`
 - At this point, the client will connect to the server
 
