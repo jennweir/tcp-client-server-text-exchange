@@ -21,7 +21,8 @@ def handle_client_connections(client_socket, client_address, storage):
                     client_socket.sendall(response.encode('utf-8'))
                     continue
                 storage[key] = value
-                response = f"Message processed for PUT request of {key}: {value}\n".encode('utf-8')
+                # return 'OK' for successful PUT commands
+                response = "OK\n".encode('utf-8')
 
             elif message.startswith("GET"):
                 # handle GET command
@@ -32,9 +33,9 @@ def handle_client_connections(client_socket, client_address, storage):
                     response = "Error: GET command requires a non-empty key. Try again.\n"
                     client_socket.sendall(response.encode('utf-8'))
                     continue
-                # return 'Key not found' as error handling if the user requests a key that does not exist
-                value = storage.get(key, "Key not found")
-                response = f"Value for {key}: {value}\n".encode('utf-8')
+                # return 'NOT FOUND' if the user requests a key that does not exist
+                value = storage.get(key, "NOT FOUND")
+                response = f"{value}\n".encode('utf-8')
 
             else:
                 response = "Error: Invalid command. Either `PUT key value` or `GET key` are accepted.\n".encode('utf-8')
