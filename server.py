@@ -1,11 +1,17 @@
 import socket
 import threading
+import time
 
 def handle_client_connections(client_socket, client_address, storage):
+    client_socket.settimeout(15)  # 15 second timeout to detect stalled clients
     try:
         # run in a loop to continuously receive messages from a client until it disconnects
         while True:
-            message = client_socket.recv(1024).decode('utf-8').strip()
+            try:
+                message = client_socket.recv(1024).decode('utf-8').strip()
+            except socket.timeout:
+                print(f"Timeout Error: nothing received from {client_address} for 15 seconds")
+                break
             # if message is empty, the client has disconnected. handle broken client connection gracefully
             if not message:
                 break
