@@ -2,7 +2,7 @@ import socket
 import threading
 import time
 
-def handle_client_connections(client_socket, client_address, storage):
+def handle_client_connections(client_socket, client_address, storage, storage_lock):
     client_socket.settimeout(180)  # 180 second timeout to detect stalled clients
     try:
         # run in a loop to continuously receive messages from a client until it disconnects
@@ -26,7 +26,8 @@ def handle_client_connections(client_socket, client_address, storage):
                     response = "Error: PUT command requires both a non-empty key and value. Try again.\n"
                     client_socket.sendall(response.encode('utf-8'))
                     continue
-                storage[key] = value
+                with storage_lock:
+                    storage[key] = value
                 # return 'OK' for successful PUT commands
                 response = "OK\n".encode('utf-8')
 
@@ -40,7 +41,8 @@ def handle_client_connections(client_socket, client_address, storage):
                     client_socket.sendall(response.encode('utf-8'))
                     continue
                 # return 'NOT FOUND' if the user requests a key that does not exist
-                value = storage.get(key, "NOT FOUND")
+                with storage_lock:
+                    value = storage.get(key, "NOT FOUND")
                 response = f"{value}\n".encode('utf-8')
 
             else:
@@ -58,6 +60,7 @@ def main():
     server_address = ('127.0.0.1', 12345) 
     threads = []
     storage = {}  # in-memory key-value store for PUT/GET client commands
+    storage_lock = threading.Lock()  # lock to ensure thread-safe access to storage
 
     try:
         try:
@@ -76,7 +79,7 @@ def main():
             print(f"Connection from {client_address}")
             # create daemon threads to handle each client connection concurrently
             # use daemon threads so they will automatically be cleaned up when the server shuts down
-            thread = threading.Thread(target=handle_client_connections, args=(client_socket, client_address, storage), daemon=True)
+            thread = threading.Thread(target=handle_client_connections, args=(client_socket, client_address, storage, storage_lock), daemon=True)
             thread.start()
             threads.append(thread)
 
